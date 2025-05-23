@@ -23,18 +23,24 @@ class User extends Database {
     }
 
     public function register($data) {
-        $sql = "INSERT INTO users (name, email, password, created_at, updated_at) VALUES (:name, :email, :password, :created_at, :updated_at)";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => password_hash($data['password'], PASSWORD_BCRYPT),
-            'created_at' => $data['created_at'],
-            'updated_at' => $data['updated_at']
-        ]);
+    $sql = "INSERT INTO users (name, email, password, address, phone, birthdate, created_at, updated_at)
+            VALUES (:name, :email, :password, :address, :phone, :birthdate, :created_at, :updated_at)";
+    
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'password' => password_hash($data['password'], PASSWORD_BCRYPT),
+        'address' => $data['address'],
+        'phone' => $data['phone'],
+        'birthdate' => $data['birthdate'],
+        'created_at' => $data['created_at'],
+        'updated_at' => $data['updated_at']
+    ]);
 
-        return $this->db->lastInsertId();
-    }
+    return $this->db->lastInsertId();
+}
+
 
     public function update($data) {
         $sql = "UPDATE users SET name = :name, email = :email, address = :address, phone = :phone, birthdate = :birthdate WHERE id = :id";

@@ -1,17 +1,18 @@
 <?php include 'helpers/functions.php'; ?>
 <?php template('header.php'); ?>
+
 <?php
 
-if(isset($_GET['remove'])) {
+if (isset($_GET['remove'])) {
     $productId = $_GET['remove'];
-    if(isset($_SESSION['cart'][$productId])) {
+    if (isset($_SESSION['cart'][$productId])) {
         unset($_SESSION['cart'][$productId]);
         echo "<script>alert('Product removed from cart');</script>";
     }
 }
 
-$amounLocale = 'en_PH';
-$pesoFormatter = new NumberFormatter($amounLocale, NumberFormatter::CURRENCY);
+$amountLocale = 'en_PH';
+$pesoFormatter = new NumberFormatter($amountLocale, NumberFormatter::CURRENCY);
 
 ?>
 
@@ -19,7 +20,7 @@ $pesoFormatter = new NumberFormatter($amounLocale, NumberFormatter::CURRENCY);
     <div class="row">
         <div class="col-md-12">
             <h1>Cart</h1>
-            <?php if(countCart() == 0): ?>
+            <?php if (countCart() == 0): ?>
                 <p>Your cart is empty.</p>
                 <a href="index.php" class="btn btn-primary">Continue Shopping</a>
             <?php else: ?>
@@ -34,23 +35,32 @@ $pesoFormatter = new NumberFormatter($amounLocale, NumberFormatter::CURRENCY);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($_SESSION['cart'] as $item): ?>
+                        <?php foreach ($_SESSION['cart'] as $item): ?>
                             <tr>
                                 <td><?php echo $item['name'] ?></td>
                                 <td><?php echo $item['quantity'] ?></td>
                                 <td><?php echo $pesoFormatter->formatCurrency($item['price'], 'PHP') ?></td>
                                 <td><?php echo $pesoFormatter->formatCurrency($item['total'], 'PHP') ?></td>
-                                <td><a href="cart.php?remove=<?php echo $item['product_id'] ?>" class="btn btn-danger">Remove</a></td>
+                                <td>
+                                    <a href="cart.php?remove=<?php echo $item['product_id'] ?>" class="btn btn-danger">Remove</a>
+                                </td>
                                 <?php $superTotal = isset($superTotal) ? $superTotal + $item['total'] : $item['total']; ?>
                             </tr>
                         <?php endforeach; ?>
                         <tr>
                             <td colspan="3" class="text-end"><strong>Total</strong></td>
                             <td colspan="2"><strong><?php echo $pesoFormatter->formatCurrency($superTotal, 'PHP') ?></strong></td>
+                        </tr>
                     </tbody>
                 </table>
 
-                <a href="checkout.php" class="btn btn-success">Checkout</a>
+                <?php if (isset($_SESSION['user'])): ?>
+                    <a href="checkout.php" class="btn btn-success">Checkout</a>
+                <?php else: ?>
+                    <div class="alert alert-warning">Please log in to proceed to checkout.</div>
+                    <a href="login.php" class="btn btn-warning">Login</a>
+                <?php endif; ?>
+
                 <a href="index.php" class="btn btn-primary">Continue Shopping</a>
             <?php endif; ?>
         </div>

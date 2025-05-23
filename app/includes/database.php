@@ -7,7 +7,7 @@ use PDOException;
 
 class Database {
     private $host = "localhost";
-    private $db_name = "mini_framework_store_rcjie";
+    private $db_name = "rcjiestore_db";
     private $username = "root";
     private $password = "";
     protected $conn;
